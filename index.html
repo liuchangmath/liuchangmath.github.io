@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Alex Mercer — Mathematician</title>
+  <title>Chang Liu — Mathematician</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
@@ -15,6 +15,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
+      /* Light theme (default) */
       --bg: #f5f0e8;
       --surface: #fdf9f1;
       --border: #ddd4c2;
@@ -22,8 +23,72 @@
       --text-muted: #7a6e5a;
       --accent: #b84c16;
       --accent-light: #f5e4d5;
+      
       --heading-font: 'Playfair Display', Georgia, serif;
       --body-font: 'Source Sans 3', sans-serif;
+    }
+
+    /* Dark theme */
+    [data-theme="dark"] {
+      --bg: #1a1816;
+      --surface: #24221f;
+      --border: #3d3935;
+      --text: #e6e2db;
+      --text-muted: #a39c91;
+      --accent: #d97843;
+      --accent-light: #3d2315;
+    }
+
+    /* Transition for themes */
+    body, aside, .pub-item, .funding-item, a, p, h1, h2, div, span, circle, ellipse, th, td {
+      transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, fill 0.4s ease, opacity 0.4s ease;
+    }
+    
+    [data-theme="dark"] aside {
+      background: #24221f;
+    }
+
+    /* Language display logic */
+    [data-lang="zh"] .lang-en { display: none !important; }
+    [data-lang="en"] .lang-zh { display: none !important; }
+
+    /* Chinese font fallback */
+    [data-lang="zh"] body {
+      font-family: var(--body-font), "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    [data-lang="zh"] h1, [data-lang="zh"] h2, [data-lang="zh"] .sidebar-name, [data-lang="zh"] .pub-title, [data-lang="zh"] .funding-name {
+      font-family: var(--heading-font), "Noto Serif SC", "Songti SC", serif;
+      font-weight: 700;
+    }
+
+    /* Toggles Control */
+    .controls {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      display: flex;
+      gap: 0.8rem;
+      z-index: 100;
+    }
+
+    .ctrl-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      cursor: pointer;
+      padding: 0.4rem 0.8rem;
+      font-family: var(--body-font);
+      font-size: 0.85rem;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 40px;
+    }
+
+    .ctrl-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
     }
 
     html { scroll-behavior: smooth; }
@@ -137,7 +202,7 @@
     /* ── Main content ── */
     main {
       padding: 4rem 4rem 4rem 4rem;
-      max-width: 740px;
+      max-width: 1080px;
     }
 
     /* ── Hero ── */
@@ -341,21 +406,42 @@
     }
   </style>
 </head>
-<body>
+<body data-theme="light" data-lang="en">
+<div class="controls">
+  <button class="ctrl-btn" id="lang-toggle" aria-label="Toggle language">中文/EN</button>
+  <button class="ctrl-btn" id="theme-toggle" aria-label="Toggle theme">🌙</button>
+</div>
 <div class="wrapper">
 
   <!-- SIDEBAR -->
   <aside>
-    <div class="sidebar-name">Alex Mercer</div>
-    <div class="sidebar-role">Associate Professor<br/>ETH Zürich</div>
+    <div class="sidebar-name">
+      <span class="lang-en">Chang Liu</span>
+      <span class="lang-zh">刘畅</span>
+    </div>
+    <div class="sidebar-role">
+      <span class="lang-en">Doctoral Candidate<br/>University of Göttingen</span>
+      <span class="lang-zh">博士在读<br/>德国哥廷根大学</span>
+    </div>
 
     <nav>
       <ul class="nav-list">
-        <li><a href="#publications">Publications</a></li>
-        <li><a href="#funding">Funding</a></li>
-        <li><a href="#talks">Talks</a></li>
-        <li><a href="#teaching">Teaching</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="#publications">
+          <span class="lang-en">Publications</span>
+          <span class="lang-zh">出版物</span>
+        </a></li>
+        <li><a href="#education">
+          <span class="lang-en">Education</span>
+          <span class="lang-zh">教育背景</span>
+        </a></li>
+        <li><a href="#communications">
+          <span class="lang-en">Academic Comms</span>
+          <span class="lang-zh">学术交流</span>
+        </a></li>
+        <li><a href="#contact">
+          <span class="lang-en">Contact</span>
+          <span class="lang-zh">联系方式</span>
+        </a></li>
       </ul>
     </nav>
 
@@ -377,170 +463,315 @@
       <section id="home">
         <div class="hero-photo-wrap">
           <div class="hero-photo">
-            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="50" cy="36" r="22" fill="#b84c16" opacity="0.5"/>
-              <ellipse cx="50" cy="82" rx="30" ry="16" fill="#b84c16" opacity="0.3"/>
-            </svg>
+            <img src="photomy.jpg" alt="Chang Liu" style="width: 100%; height: 100%; object-fit: cover;">
           </div>
         </div>
-        <h1>Alex Mercer</h1>
-        <p class="hero-position">Associate Professor · Institute of Mathematics, ETH Zürich</p>
+        <h1>
+          <span class="lang-en">Chang Liu</span>
+          <span class="lang-zh">刘畅</span>
+        </h1>
+        <p class="hero-position">
+          <span class="lang-en">Doctoral Candidate in Pure Mathematics · University of Göttingen</span>
+          <span class="lang-zh">基础数学博士在读 · 德国哥廷根大学</span>
+        </p>
         <div class="bio">
-          <p>I am an Associate Professor at the <a href="#">Institute of Mathematics</a> of <a href="#">ETH Zürich</a>.
-          My research is in <strong>geometric analysis</strong> and <strong>global differential geometry</strong>,
-          with a particular focus on curvature constraints in Riemannian geometry and their topological consequences.</p>
-          <p>I am especially interested in questions relating the scalar curvature $\text{Ric} \geq 0$ to spectral geometry and index theory, and in the coarse geometry of non-compact manifolds.</p>
+          <div class="lang-en">
+            <p>I am a Doctoral Candidate in Pure Mathematics at the <a href="https://www.uni-goettingen.de/">University of Göttingen</a>, supervised by Prof. Preda Mihăilescu.
+            Previously, I completed my Master's degree at Xiamen University.</p>
+            <p>My research focuses on <strong>number theory</strong>, specifically studying solutions to Diophantine equations.</p>
+          </div>
+          <div class="lang-zh">
+            <p>我是<a href="https://www.uni-goettingen.de/">哥廷根大学</a>（University of Göttingen）基础数学专业的博士研究生，导师是 Preda Mihăilescu 教授。此前，我在厦门大学完成了硕士学位。</p>
+            <p>我的研究方向为<strong>数论</strong>，主要关注 Diophantine 方程的解的相关问题。</p>
+          </div>
         </div>
       </section>
 
       <!-- PUBLICATIONS -->
       <section id="publications">
         <span class="h2-accent"></span>
-        <h2>Publications</h2>
+        <h2>
+          <span class="lang-en">Publications</span>
+          <span class="lang-zh">学术出版物</span>
+        </h2>
         <div class="pub-list">
           <div class="pub-item">
-            <p class="pub-title">Rigidity of stable minimal hypersurfaces via eigenvalue comparison</p>
-            <p class="pub-authors">Alex Mercer, Sofia Lindqvist</p>
-            <p class="pub-venue">Journal of Differential Geometry, 2024</p>
+            <p class="pub-title">Beyond and slightly aside of the Fermat desert</p>
+            <p class="pub-authors">Bartolomé, Boris and Chang Liu and Preda Mihăilescu*</p>
+            <p class="pub-venue">
+              <span class="lang-en">Under review, 2025</span>
+              <span class="lang-zh">审稿中, 2025</span>
+            </p>
             <div class="pub-abstract">
-              We show that compact stable minimal hypersurfaces in manifolds with $\text{Ric} \geq (n-1)$ must be totally geodesic, via a spectral comparison on the stability operator.
+              The abstract describes an approach to Fermat's Conjecture utilizing methods restricted to the class field theory of the p-cyclotomic field. These methods were known over a century ago, and the proof presented is described as a "remote echo" of results from the early 20th century. The paper discusses how previous proofs relied on independent and powerful general theorems with broad mathematical consequences, whereas this work employs more specialized methods. It also references the "Fermat desert" as a metaphor for the long, barren period of research on the conjecture.
             </div>
-            <button class="btn-abstract" onclick="toggleAbstract(this)">+ Abstract</button>
+            <button class="btn-abstract" onclick="toggleAbstract(this)">
+              <span class="lang-en">+ Abstract</span>
+              <span class="lang-zh">+ 摘要</span>
+            </button>
           </div>
           <div class="pub-item">
-            <p class="pub-title">Index theory and scalar curvature on spin manifolds</p>
-            <p class="pub-authors">Alex Mercer</p>
-            <p class="pub-venue">Advances in Mathematics, 2023</p>
+            <p class="pub-title">The diophantine equation $(2^{k}-1)(b^{k}-1)=y^{q}$</p>
+            <p class="pub-authors">Chang Liu and Bo He*</p>
+            <p class="pub-venue">
+              <span class="lang-en">Preprint, under review (arXiv:2512.00548), 2025</span>
+              <span class="lang-zh">预印本, 审稿中 (arXiv:2512.00548), 2025</span>
+            </p>
             <div class="pub-abstract">
-              We extend the Lichnerowicz vanishing theorem to generalised Dirac operators on spin$^c$ manifolds, yielding new obstructions to positive scalar curvature.
+              This paper discusses the exponential Diophantine equation $(2^k-1)(b^k-1)=y^q$ where $k \ge 2$, $b$ is an odd integer, and $q$ is an odd prime exponent. The authors aim to derive effective upper bounds for $q$ in terms of $b$. Specifically, they demonstrate that $q \le \log_2(b+1)$ generally holds, with the exception of a finite, explicitly determined set of exceptional pairs $(b,q)$ when $3 \le b &lt; 10^6$. As an application, they prove that the related equation $(2^k-1)(b^k-1)=x^n$ has no positive integer solution $(k,x,n)$ for several specific odd values of $b$, including $b \in \{5, 7, 11, 13, 21, 23, 27, 29\}$.
             </div>
-            <button class="btn-abstract" onclick="toggleAbstract(this)">+ Abstract</button>
+            <button class="btn-abstract" onclick="toggleAbstract(this)">
+              <span class="lang-en">+ Abstract</span>
+              <span class="lang-zh">+ 摘要</span>
+            </button>
           </div>
           <div class="pub-item">
-            <p class="pub-title">Coarse geometry of Riemannian foliations with bounded geometry</p>
-            <p class="pub-authors">Alex Mercer, David Kowalski, Yuki Tanaka</p>
-            <p class="pub-venue">Geometry & Topology, 2022</p>
+            <p class="pub-title">The diophantine equation $(2^k-1)(3^k-1)=x^n$</p>
+            <p class="pub-authors">He, Bo and Chang Liu*</p>
+            <p class="pub-venue">Periodica Mathematica Hungarica, 2025</p>
             <div class="pub-abstract">
-              We study the large-scale geometry of foliations via coarse index methods, proving a coarse analogue of the Connes fibration theorem.
+              The authors investigated the Diophantine equation $(2^k-1)(3^k-1)=x^n$ and proved that it has no solutions in positive integers $k, x$, and $n$ where $n &gt; 2$.
             </div>
-            <button class="btn-abstract" onclick="toggleAbstract(this)">+ Abstract</button>
+            <button class="btn-abstract" onclick="toggleAbstract(this)">
+              <span class="lang-en">+ Abstract</span>
+              <span class="lang-zh">+ 摘要</span>
+            </button>
+          </div>
+          <div class="pub-item">
+            <p class="pub-title">An alternative proof of the Catalan conjecture</p>
+            <p class="pub-authors">Chang Liu and Preda Mihăilescu*</p>
+            <p class="pub-venue">Bulletin of the Transilvania University of Braşov, 2025</p>
+            <div class="pub-abstract">
+              This paper offers a simplified approach to Mihăilescu's original proof of the Catalan conjecture. The original proof, published in 2004, utilized real binomial power series expansions and the annihilation of real class groups, relying on a theorem by Thaine. The alternative proof by Liu and Mihăilescu employs Stickelberger annihilation of the minus part of the class group, thereby eliminating the need for Thaine's Theorem. This approach is founded on demonstrating the existence of a character that connects Galois exponents of roots of unity.
+            </div>
+            <button class="btn-abstract" onclick="toggleAbstract(this)">
+              <span class="lang-en">+ Abstract</span>
+              <span class="lang-zh">+ 摘要</span>
+            </button>
           </div>
         </div>
       </section>
 
-      <!-- FUNDING -->
-      <section id="funding">
+      <!-- EDUCATION -->
+      <section id="education">
         <span class="h2-accent"></span>
-        <h2>Funding</h2>
+        <h2>
+          <span class="lang-en">Education</span>
+          <span class="lang-zh">教育背景</span>
+        </h2>
         <div class="funding-list">
           <div class="funding-item">
-            <p class="funding-name">ERC Starting Grant — GEOTOP</p>
-            <p class="funding-desc">Geometric topology and scalar curvature. European Research Council, 2022–2027.</p>
+            <p class="funding-name">
+              <span class="lang-en">Doctoral Candidate in Pure Mathematics</span>
+              <span class="lang-zh">基础数学博士在读</span>
+            </p>
+            <p class="funding-desc">
+              <span class="lang-en">University of Göttingen, Germany, 2021–Now. Supervised by Preda Mihăilescu.</span>
+              <span class="lang-zh">德国哥廷根大学，2021至今. 导师: Preda Mihăilescu.</span>
+            </p>
           </div>
           <div class="funding-item">
-            <p class="funding-name">SNF Project Grant</p>
-            <p class="funding-desc">Rigidity phenomena in Riemannian geometry. Swiss National Science Foundation, 2020–2024.</p>
+            <p class="funding-name">
+              <span class="lang-en">Master in Pure Mathematics</span>
+              <span class="lang-zh">基础数学硕士</span>
+            </p>
+            <p class="funding-desc">
+              <span class="lang-en">Xiamen University, China, 2018–2021. Supervised by Huilin Zhu.</span>
+              <span class="lang-zh">厦门大学，中国，2018–2021. 导师: 祝辉林.</span>
+            </p>
           </div>
           <div class="funding-item">
-            <p class="funding-name">ETH Research Grant</p>
-            <p class="funding-desc">Index theory for non-compact manifolds. 2021–2023.</p>
+            <p class="funding-name">
+              <span class="lang-en">Bachelor in Food Quality and Safety</span>
+              <span class="lang-zh">食品质量与安全本科</span>
+            </p>
+            <p class="funding-desc">
+              <span class="lang-en">China Agricultural University, 2011–2018. Supervised by Hao Zhang.</span>
+              <span class="lang-zh">中国农业大学，中国，2011–2018.</span>
+            </p>
+          </div>
+          <div class="funding-item lang-zh">
+            <p class="funding-name">
+              <span>英语本科双学位</span>
+            </p>
+            <p class="funding-desc">
+              <span>中国农业大学，中国，2015–2018.</span>
+            </p>
           </div>
         </div>
       </section>
 
-      <!-- TALKS -->
-      <section id="talks">
+      <!-- COMMUNICATIONS -->
+      <section id="communications">
         <span class="h2-accent"></span>
-        <h2>Recorded Talks</h2>
+        <h2>
+          <span class="lang-en">Academic Communications</span>
+          <span class="lang-zh">学术交流</span>
+        </h2>
         <div class="talk-list">
           <div class="talk-item">
-            <div class="talk-year">Dec 2024</div>
+            <div class="talk-year">
+              <span class="lang-en">Aug 2022</span>
+              <span class="lang-zh">2022.08</span>
+            </div>
             <div>
-              <p class="talk-title">Spectral geometry and curvature rigidity</p>
-              <p class="talk-event">Oberwolfach Workshop on Differential Geometry</p>
-              <div class="talk-links">
-                <a class="talk-link" href="#">Video</a>
-                <span style="color:var(--border)">·</span>
-                <a class="talk-link" href="#">Slides</a>
-              </div>
+              <p class="talk-title">
+                <span class="lang-en">Automorphic Forms Summer School</span>
+                <span class="lang-zh">自守形式暑期学校</span>
+              </p>
+              <p class="talk-event">
+                <span class="lang-en">Erdős Center, Budapest, Hungary</span>
+                <span class="lang-zh">匈牙利布达佩斯，埃尔德什中心</span>
+              </p>
             </div>
           </div>
           <div class="talk-item">
-            <div class="talk-year">Jun 2024</div>
+            <div class="talk-year">
+              <span class="lang-en">Aug 2020</span>
+              <span class="lang-zh">2020.08</span>
+            </div>
             <div>
-              <p class="talk-title">New obstructions to positive scalar curvature</p>
-              <p class="talk-event">International Congress of Mathematicians, Zürich</p>
-              <div class="talk-links">
-                <a class="talk-link" href="#">Video</a>
-              </div>
+              <p class="talk-title">
+                <span class="lang-en">Number Theory Short Online Course</span>
+                <span class="lang-zh">全国数论短期线上课程</span>
+              </p>
+              <p class="talk-event">
+                <span class="lang-en">Xiamen University, Xiamen, China</span>
+                <span class="lang-zh">厦门大学</span>
+              </p>
             </div>
           </div>
           <div class="talk-item">
-            <div class="talk-year">Mar 2023</div>
+            <div class="talk-year">
+              <span class="lang-en">May 2019</span>
+              <span class="lang-zh">2019.05</span>
+            </div>
             <div>
-              <p class="talk-title">Coarse index theory — an introduction</p>
-              <p class="talk-event">Graduate Colloquium, University of Bonn</p>
-              <div class="talk-links">
-                <a class="talk-link" href="#">Video</a>
-                <span style="color:var(--border)">·</span>
-                <a class="talk-link" href="#">Slides</a>
-              </div>
+              <p class="talk-title">
+                <span class="lang-en">Young Mathematicians Academic Forum (Séminaire Mathjeunes--USTC)</span>
+                <span class="lang-zh">青年数学家学术论坛</span>
+              </p>
+              <p class="talk-event">
+                <span class="lang-en">University of Science and Technology of China, Hefei, China</span>
+                <span class="lang-zh">中国科学技术大学</span>
+              </p>
+            </div>
+          </div>
+          <div class="talk-item">
+            <div class="talk-year">
+              <span class="lang-en">Jan 2019</span>
+              <span class="lang-zh">2019.01</span>
+            </div>
+            <div>
+              <p class="talk-title">
+                <span class="lang-en">Diophantine Analysis Workshop</span>
+                <span class="lang-zh">丢番图分析厦门研讨会</span>
+              </p>
+              <p class="talk-event">
+                <span class="lang-en">Xiamen University, Xiamen, China</span>
+                <span class="lang-zh">厦门大学</span>
+              </p>
+            </div>
+          </div>
+          <div class="talk-item">
+            <div class="talk-year">
+              <span class="lang-en">Jul 2018</span>
+              <span class="lang-zh">2018.07</span>
+            </div>
+            <div>
+              <p class="talk-title">
+                <span class="lang-en">National Summer School for Graduate Students</span>
+                <span class="lang-zh">全国基础数学研究生暑期学校</span>
+              </p>
+              <p class="talk-event">
+                <span class="lang-en">Xiamen University, Xiamen, China</span>
+                <span class="lang-zh">厦门大学</span>
+              </p>
             </div>
           </div>
         </div>
-      </section>
-
-      <!-- TEACHING -->
-      <section id="teaching">
-        <span class="h2-accent"></span>
-        <h2>Teaching</h2>
-        <table>
-          <thead>
-            <tr><th>Term</th><th>Course</th><th>Level</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>SS 2025</td><td>Differential Geometry II</td><td>Graduate</td></tr>
-            <tr><td>WS 2024</td><td>Introduction to Index Theory</td><td>Seminar</td></tr>
-            <tr><td>SS 2024</td><td>Analysis III</td><td>Undergraduate</td></tr>
-            <tr><td>WS 2023</td><td>Riemannian Geometry</td><td>Graduate</td></tr>
-          </tbody>
-        </table>
       </section>
 
       <!-- CONTACT -->
       <section id="contact">
         <span class="h2-accent"></span>
-        <h2>Contact</h2>
+        <h2>
+          <span class="lang-en">Contact</span>
+          <span class="lang-zh">联系方式</span>
+        </h2>
         <div class="contact-dl">
           <div>
-            <p class="contact-dt">Email</p>
-            <p class="contact-dd"><a href="mailto:mercer@math.ethz.ch">mercer@math.ethz.ch</a></p>
+            <p class="contact-dt">
+              <span class="lang-en">Email</span>
+              <span class="lang-zh">电子邮件</span>
+            </p>
+            <p class="contact-dd"><a href="mailto:chang.liu@mathematik.uni-goettingen.de">chang.liu@mathematik.uni-goettingen.de</a><br/><a href="mailto:chang.liu03@stud.uni-goettingen.de">chang.liu03@stud.uni-goettingen.de</a><br/><a href="mailto:liuch951229@gmail.com">liuch951229@gmail.com</a></p>
           </div>
           <div>
-            <p class="contact-dt">Office</p>
-            <p class="contact-dd">HG G 43.2, Rämistrasse 101<br/>8092 Zürich, Switzerland</p>
-          </div>
-          <div>
-            <p class="contact-dt">Phone</p>
-            <p class="contact-dd">+41 44 632 00 00</p>
-          </div>
-          <div>
-            <p class="contact-dt">Postal Address</p>
-            <p class="contact-dd">Institute of Mathematics<br/>ETH Zürich, 8092 Zürich</p>
+            <p class="contact-dt">
+              <span class="lang-en">Location</span>
+              <span class="lang-zh">位置</span>
+            </p>
+            <p class="contact-dd">
+              <span class="lang-en">Göttingen, Germany<br/>Shandong, China</span>
+              <span class="lang-zh">哥廷根, 德国<br/>山东, 中国</span>
+            </p>
           </div>
         </div>
       </section>
 
     </main>
-    <footer>© 2026 Alex Mercer · ETH Zürich</footer>
+    <footer>© 2026 Chang Liu</footer>
   </div>
 </div>
 
 <script>
+// Toggle abstract logic
 function toggleAbstract(btn) {
   const abstract = btn.previousElementSibling;
   const open = abstract.classList.toggle('open');
-  btn.textContent = open ? '− Abstract' : '+ Abstract';
+  // Check which language is active to set proper button text
+  const currentLang = document.body.getAttribute('data-lang');
+  
+  if (currentLang === 'zh') {
+    btn.innerHTML = `<span class="lang-zh">${open ? '− 收起摘要' : '+ 展开摘要'}</span>`;
+  } else {
+    btn.innerHTML = `<span class="lang-en">${open ? '− Abstract' : '+ Abstract'}</span>`;
+  }
+}
+
+// Global state
+let currentTheme = localStorage.getItem('theme') || 'light';
+let currentLang = localStorage.getItem('lang') || 'en';
+
+// Initialization
+document.body.setAttribute('data-theme', currentTheme);
+document.body.setAttribute('data-lang', currentLang);
+updateThemeButton();
+
+// Listeners for toggles
+document.getElementById('theme-toggle').addEventListener('click', () => {
+  currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+  document.body.setAttribute('data-theme', currentTheme);
+  localStorage.setItem('theme', currentTheme);
+  updateThemeButton();
+});
+
+document.getElementById('lang-toggle').addEventListener('click', () => {
+  // Smooth fade out
+  document.body.style.opacity = '0';
+  setTimeout(() => {
+    currentLang = currentLang === 'en' ? 'zh' : 'en';
+    document.body.setAttribute('data-lang', currentLang);
+    localStorage.setItem('lang', currentLang);
+    // Smooth fade in
+    document.body.style.opacity = '1';
+  }, 300); // match CSS duration roughly
+});
+
+function updateThemeButton() {
+  const btn = document.getElementById('theme-toggle');
+  btn.textContent = currentTheme === 'light' ? '🌙' : '☀️';
 }
 </script>
 </body>
