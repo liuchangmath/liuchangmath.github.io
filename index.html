@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Chang Liu — Mathematician</title>
+  <title>Alex Mercer — Mathematician</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Lato:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
@@ -15,16 +15,15 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #ffffff;
-      --surface: #f8f7ff;
-      --border: #e8e4f0;
-      --text: #1a1625;
-      --text-muted: #6b6580;
-      --accent: #6d28d9;
-      --accent2: #7c3aed;
-      --grad: linear-gradient(135deg, #6d28d9 0%, #2563eb 100%);
-      --heading-font: 'Space Grotesk', sans-serif;
-      --body-font: 'Lato', sans-serif;
+      --bg: #f5f0e8;
+      --surface: #fdf9f1;
+      --border: #ddd4c2;
+      --text: #2c2416;
+      --text-muted: #7a6e5a;
+      --accent: #b84c16;
+      --accent-light: #f5e4d5;
+      --heading-font: 'Playfair Display', Georgia, serif;
+      --body-font: 'Source Sans 3', sans-serif;
     }
 
     html { scroll-behavior: smooth; }
@@ -35,38 +34,29 @@
       font-family: var(--body-font);
       font-weight: 300;
       line-height: 1.8;
+      min-height: 100vh;
     }
 
-    /* ── Polytope canvas ── */
-    #poly-canvas {
-      position: fixed;
-      top: 0; right: 0;
-      width: 50vw;
-      height: 100vh;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.08;
-    }
-
-    /* ── Diagonal accent band ── */
-    body::after {
+    /* ── Graph paper texture ── */
+    body::before {
       content: '';
       position: fixed;
-      top: 0; right: 0;
-      width: 45%;
-      height: 100%;
-      background: linear-gradient(160deg, #f3f0ff 0%, #ede9fe 50%, #f0f4ff 100%);
-      z-index: -1;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(180,160,120,0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(180,160,120,0.12) 1px, transparent 1px);
+      background-size: 28px 28px;
       pointer-events: none;
+      z-index: 0;
     }
 
     /* ── Layout ── */
-    .layout {
-      display: grid;
-      grid-template-columns: 200px 1fr;
-      min-height: 100vh;
+    .wrapper {
       position: relative;
       z-index: 1;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      min-height: 100vh;
     }
 
     /* ── Sidebar ── */
@@ -76,776 +66,482 @@
       height: 100vh;
       display: flex;
       flex-direction: column;
-      padding: 2.5rem 1.5rem;
+      padding: 3rem 2rem;
       border-right: 1px solid var(--border);
+      background: rgba(245,240,232,0.9);
     }
 
-    .sidebar-monogram {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      background: var(--grad);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
+    .sidebar-name {
       font-family: var(--heading-font);
+      font-size: 1.3rem;
       font-weight: 700;
-      font-size: 1.1rem;
-      margin-bottom: 2rem;
-      letter-spacing: -0.02em;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 0.3rem;
     }
 
-    .nav-section-label {
-      font-size: 0.65rem;
-      font-family: var(--heading-font);
-      font-weight: 600;
-      letter-spacing: 0.15em;
+    .sidebar-role {
+      font-size: 0.78rem;
       color: var(--text-muted);
-      text-transform: uppercase;
-      margin-bottom: 0.75rem;
-      margin-top: 1.5rem;
+      margin-bottom: 2.5rem;
+      line-height: 1.5;
     }
 
-    .nav-list { list-style: none; display: flex; flex-direction: column; gap: 0.15rem; }
+    .sidebar-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 1.5rem 0;
+    }
+
+    .nav-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
 
     .nav-list a {
-      font-family: var(--heading-font);
-      font-size: 0.82rem;
+      font-size: 0.88rem;
       font-weight: 400;
       color: var(--text-muted);
       text-decoration: none;
-      padding: 0.35rem 0.6rem;
-      border-radius: 6px;
-      display: block;
-      transition: background 0.15s, color 0.15s;
+      padding: 0.3rem 0;
+      transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
-    .nav-list a:hover {
-      background: var(--surface);
-      color: var(--accent);
+    .nav-list a::before {
+      content: '';
+      width: 0;
+      height: 1px;
+      background: var(--accent);
+      transition: width 0.25s;
     }
+
+    .nav-list a:hover { color: var(--accent); }
+    .nav-list a:hover::before { width: 14px; }
 
     .ext-links {
       margin-top: auto;
       display: flex;
       flex-direction: column;
-      gap: 0.35rem;
+      gap: 0.4rem;
     }
 
     .ext-link {
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
       text-decoration: none;
-      padding: 0.2rem 0;
       transition: color 0.2s;
-      font-family: var(--heading-font);
     }
 
     .ext-link:hover { color: var(--accent); }
 
-    /* ── Main scrollable area ── */
+    /* ── Main content ── */
     main {
-      padding: 4rem 5rem 4rem 4rem;
-      max-width: 780px;
+      padding: 4rem 4rem 4rem 4rem;
+      max-width: 740px;
     }
 
     /* ── Hero ── */
-    #home { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-bottom: 4rem; }
+    #home { padding-bottom: 4rem; border-bottom: 1px solid var(--border); }
 
-    .hero-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.25rem 0.75rem;
-      border-radius: 999px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      font-family: var(--heading-font);
-      font-size: 0.72rem;
-      font-weight: 500;
-      color: var(--accent);
-      letter-spacing: 0.04em;
-      margin-bottom: 2rem;
-    }
-
-    .hero-tag::before {
-      content: '●';
-      font-size: 0.5rem;
-    }
-
-    .hero-top {
-      display: flex;
-      align-items: center;
-      gap: 2.5rem;
-      margin-bottom: 2rem;
+    .hero-photo-wrap {
+      float: right;
+      margin: 0 0 1.5rem 2.5rem;
     }
 
     .hero-photo {
-      width: 110px;
-      height: 110px;
-      border-radius: 24px;
-      background: var(--surface);
+      width: 130px;
+      height: 160px;
+      border-radius: 4px;
+      background: var(--accent-light);
       border: 1px solid var(--border);
-      flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
     }
 
-    .hero-photo svg { width: 55px; height: 55px; opacity: 0.4; }
+    .hero-photo svg { width: 60px; height: 60px; opacity: 0.4; }
 
     h1 {
       font-family: var(--heading-font);
-      font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+      font-size: clamp(2rem, 4vw, 2.8rem);
       font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 1.05;
-      background: var(--grad);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      line-height: 1.1;
+      color: var(--text);
+      margin-bottom: 0.4rem;
     }
 
-    .hero-subtitle {
-      font-family: var(--heading-font);
-      font-size: 0.88rem;
-      font-weight: 400;
+    .hero-position {
+      font-size: 0.9rem;
       color: var(--text-muted);
-      margin-top: 0.5rem;
+      margin-bottom: 1.5rem;
+      font-style: italic;
     }
 
-    .hero-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1.75rem;
-    }
-
-    .chip {
-      font-family: var(--heading-font);
-      font-size: 0.75rem;
-      font-weight: 500;
-      padding: 0.25rem 0.75rem;
-      border-radius: 6px;
-      background: var(--surface);
-      color: var(--text-muted);
-      border: 1px solid var(--border);
-    }
-
-    .bio { font-size: 0.97rem; color: var(--text); max-width: 620px; }
-    .bio a { color: var(--accent); text-decoration: none; font-weight: 400; }
-    .bio a:hover { text-decoration: underline; }
+    .bio { font-size: 0.97rem; color: var(--text); }
+    .bio a { color: var(--accent); text-decoration: none; border-bottom: 1px solid var(--accent-light); }
+    .bio a:hover { border-bottom-color: var(--accent); }
     .bio p + p { margin-top: 1rem; }
 
-    /* ── Divider ── */
-    .divider {
-      height: 1px;
-      background: linear-gradient(90deg, var(--border), transparent);
-      margin-bottom: 4rem;
-    }
-
-    /* ── Section ── */
-    section { margin-bottom: 5rem; }
-
-    .section-header {
-      display: flex;
-      align-items: baseline;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
+    /* ── Section headings ── */
+    section { padding: 4rem 0; border-bottom: 1px solid var(--border); }
+    section:last-child { border-bottom: none; }
 
     h2 {
       font-family: var(--heading-font);
-      font-size: 1.4rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
+      font-size: 1.7rem;
+      font-weight: 400;
+      font-style: italic;
       color: var(--text);
+      margin-bottom: 2rem;
     }
 
-    .section-count {
-      font-family: var(--heading-font);
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--accent);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 0.1rem 0.5rem;
-      border-radius: 4px;
+    .h2-accent {
+      display: block;
+      width: 36px;
+      height: 2px;
+      background: var(--accent);
+      margin-bottom: 0.75rem;
     }
 
     /* ── Publications ── */
-    .pub-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    .pub-list { display: flex; flex-direction: column; gap: 2rem; }
 
-    .pub-item {
-      display: grid;
-      grid-template-columns: 3px 1fr;
-      gap: 1.5rem;
-      align-items: start;
-    }
-
-    .pub-stripe {
-      height: 100%;
-      min-height: 60px;
-      border-radius: 2px;
-      background: var(--grad);
-      opacity: 0.2;
-      transition: opacity 0.2s;
-    }
-
-    .pub-item:hover .pub-stripe { opacity: 1; }
-
-    .pub-content { flex: 1; }
+    .pub-item { padding-bottom: 2rem; border-bottom: 1px dashed var(--border); }
+    .pub-item:last-child { border-bottom: none; padding-bottom: 0; }
 
     .pub-title {
       font-family: var(--heading-font);
-      font-size: 0.95rem;
-      font-weight: 600;
+      font-size: 1rem;
+      font-weight: 700;
       color: var(--text);
-      margin-bottom: 0.25rem;
-      line-height: 1.3;
+      margin-bottom: 0.3rem;
     }
 
-    .pub-authors { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.2rem; }
+    .pub-authors { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.2rem; }
 
     .pub-venue {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
+      font-style: italic;
       color: var(--accent);
-      font-weight: 500;
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.75rem;
     }
 
     .pub-abstract {
-      font-size: 0.83rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
-      background: var(--surface);
-      padding: 0.75rem;
-      border-radius: 6px;
-      margin-bottom: 0.5rem;
+      background: var(--accent-light);
+      padding: 0.75rem 1rem;
+      border-left: 3px solid var(--accent);
       display: none;
+      margin-bottom: 0.5rem;
     }
 
     .pub-abstract.open { display: block; }
 
-    .pub-actions { display: flex; align-items: center; gap: 0.75rem; }
-
     .btn-abstract {
-      font-size: 0.73rem;
-      font-family: var(--heading-font);
-      font-weight: 500;
+      font-size: 0.78rem;
       color: var(--accent);
       background: none;
       border: none;
       cursor: pointer;
       padding: 0;
+      font-family: var(--body-font);
       transition: opacity 0.2s;
     }
 
     .btn-abstract:hover { opacity: 0.7; }
 
-    .pub-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
-
-    .pub-tag {
-      font-size: 0.68rem;
-      font-family: var(--heading-font);
-      padding: 0.15rem 0.5rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      color: var(--text-muted);
-    }
-
     /* ── Funding ── */
-    .funding-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .funding-list { display: flex; flex-direction: column; gap: 1.2rem; }
 
-    .funding-card {
-      padding: 1.25rem;
+    .funding-item {
+      padding: 1rem 1.2rem;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      transition: border-color 0.2s, transform 0.2s;
+      border-radius: 3px;
     }
 
-    .funding-card:hover {
-      border-color: var(--accent);
-      transform: translateY(-2px);
-    }
-
-    .funding-card h3 {
+    .funding-name {
       font-family: var(--heading-font);
-      font-size: 0.88rem;
-      font-weight: 600;
-      margin-bottom: 0.35rem;
-      color: var(--text);
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
     }
 
-    .funding-card p { font-size: 0.8rem; color: var(--text-muted); }
-
-    .funding-badge {
-      display: inline-block;
-      font-size: 0.65rem;
-      font-family: var(--heading-font);
-      font-weight: 600;
-      padding: 0.15rem 0.5rem;
-      background: var(--grad);
-      color: white;
-      border-radius: 4px;
-      margin-bottom: 0.5rem;
-      letter-spacing: 0.04em;
-    }
+    .funding-desc { font-size: 0.85rem; color: var(--text-muted); }
 
     /* ── Talks ── */
-    .talk-list { display: flex; flex-direction: column; }
+    .talk-list { display: flex; flex-direction: column; gap: 1.5rem; }
 
-    .talk-item {
-      display: grid;
-      grid-template-columns: 80px 1fr;
-      gap: 1rem;
-      padding: 1rem 0;
-      border-bottom: 1px solid var(--border);
-      align-items: start;
-    }
+    .talk-item { display: flex; gap: 1.5rem; }
 
-    .talk-item:last-child { border-bottom: none; }
-
-    .talk-date {
-      font-family: var(--heading-font);
-      font-size: 0.72rem;
+    .talk-year {
+      font-size: 0.75rem;
+      color: var(--accent);
       font-weight: 600;
-      color: var(--text-muted);
+      min-width: 65px;
       padding-top: 0.15rem;
+      letter-spacing: 0.05em;
     }
 
-    .talk-title {
-      font-family: var(--heading-font);
-      font-size: 0.88rem;
-      font-weight: 600;
-      margin-bottom: 0.15rem;
-    }
+    .talk-title { font-size: 0.92rem; font-weight: 600; margin-bottom: 0.2rem; }
+    .talk-event { font-size: 0.82rem; color: var(--text-muted); font-style: italic; }
 
-    .talk-event { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.4rem; }
-
-    .talk-links { display: flex; gap: 0.5rem; }
+    .talk-links { display: flex; gap: 0.5rem; margin-top: 0.4rem; }
 
     .talk-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-      font-size: 0.72rem;
-      font-family: var(--heading-font);
-      font-weight: 500;
+      font-size: 0.75rem;
       color: var(--accent);
       text-decoration: none;
-      padding: 0.15rem 0.5rem;
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      transition: background 0.15s, border-color 0.15s;
-    }
-
-    .talk-link:hover { background: var(--surface); border-color: var(--accent); }
-
-    /* ── Teaching ── */
-    .course-grid { display: flex; flex-direction: column; gap: 0.75rem; }
-
-    .course-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.85rem 1.25rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      border-bottom: 1px solid transparent;
       transition: border-color 0.2s;
     }
 
-    .course-item:hover { border-color: var(--accent); }
+    .talk-link:hover { border-bottom-color: var(--accent); }
 
-    .course-left { display: flex; flex-direction: column; gap: 0.15rem; }
-    .course-name { font-family: var(--heading-font); font-size: 0.88rem; font-weight: 600; }
-    .course-inst { font-size: 0.78rem; color: var(--text-muted); }
-
-    .course-right { display: flex; gap: 0.5rem; align-items: center; }
-
-    .course-term {
+    /* ── Teaching ── */
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    thead tr { border-bottom: 2px solid var(--text); }
+    th {
+      text-align: left;
+      padding: 0.5rem 1rem 0.5rem 0;
       font-family: var(--heading-font);
-      font-size: 0.72rem;
-      font-weight: 500;
-      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.85rem;
     }
-
-    .course-level {
-      font-size: 0.68rem;
-      font-family: var(--heading-font);
-      font-weight: 600;
-      padding: 0.15rem 0.5rem;
-      border-radius: 4px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--accent);
-    }
+    td { padding: 0.6rem 1rem 0.6rem 0; border-bottom: 1px solid var(--border); color: var(--text); }
+    tr:last-child td { border-bottom: none; }
+    td:first-child { color: var(--text-muted); font-size: 0.82rem; font-style: italic; }
 
     /* ── Contact ── */
-    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .contact-dl { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2rem; }
 
-    .contact-card {
-      padding: 1.25rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-    }
-
-    .contact-label {
-      font-family: var(--heading-font);
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
+    .contact-dt {
+      font-size: 0.75rem;
       color: var(--accent);
       text-transform: uppercase;
-      margin-bottom: 0.4rem;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.25rem;
+      font-weight: 600;
     }
 
-    .contact-card p { font-size: 0.88rem; }
-    .contact-card a { color: var(--text); text-decoration: none; transition: color 0.2s; }
-    .contact-card a:hover { color: var(--accent); }
+    .contact-dd { font-size: 0.9rem; }
+    .contact-dd a { color: var(--text); text-decoration: none; border-bottom: 1px solid var(--border); transition: border-color 0.2s; }
+    .contact-dd a:hover { border-color: var(--accent); }
 
     /* ── Footer ── */
     footer {
+      background: var(--bg);
       border-top: 1px solid var(--border);
       padding: 1.5rem 4rem;
       font-size: 0.78rem;
       color: var(--text-muted);
-      font-family: var(--heading-font);
       grid-column: 2;
-      max-width: 780px;
     }
   </style>
 </head>
 <body>
+<div class="wrapper">
 
-<canvas id="poly-canvas"></canvas>
-
-<div class="layout">
   <!-- SIDEBAR -->
   <aside>
-    <div class="sidebar-monogram">CL</div>
+    <div class="sidebar-name">Alex Mercer</div>
+    <div class="sidebar-role">Associate Professor<br/>ETH Zürich</div>
 
-    <p class="nav-section-label">Navigation</p>
     <nav>
       <ul class="nav-list">
-        <li><a href="#home">Home</a></li>
         <li><a href="#publications">Publications</a></li>
-        <li><a href="#education">Education</a></li>
-        <li><a href="#communications">Academic Comms</a></li>
+        <li><a href="#funding">Funding</a></li>
+        <li><a href="#talks">Talks</a></li>
+        <li><a href="#teaching">Teaching</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
 
-    <p class="nav-section-label" style="margin-top:2rem;">Profiles</p>
+    <div class="sidebar-divider"></div>
+
     <div class="ext-links">
       <a class="ext-link" href="#">arXiv ↗</a>
       <a class="ext-link" href="#">MathSciNet ↗</a>
       <a class="ext-link" href="#">ORCID ↗</a>
-      <a class="ext-link" href="#">Scholar ↗</a>
+      <a class="ext-link" href="#">Google Scholar ↗</a>
       <a class="ext-link" href="#">zbMATH ↗</a>
     </div>
   </aside>
 
   <div>
     <main>
+
       <!-- HERO -->
       <section id="home">
-        <div class="hero-tag">Mathematics · Number Theory · Diophantine Equations</div>
-        <div class="hero-top">
+        <div class="hero-photo-wrap">
           <div class="hero-photo">
-            <img src="photomy.jpg" alt="Chang Liu" style="width: 100%; height: 100%; object-fit: cover;">
-          </div>
-          <div>
-            <h1>Chang Liu</h1>
-            <p class="hero-subtitle">Doctoral Candidate in Pure Mathematics · University of Göttingen</p>
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="50" cy="36" r="22" fill="#b84c16" opacity="0.5"/>
+              <ellipse cx="50" cy="82" rx="30" ry="16" fill="#b84c16" opacity="0.3"/>
+            </svg>
           </div>
         </div>
-
-        <div class="hero-chips">
-          <span class="chip">Diophantine Equations</span>
-          <span class="chip">Algebraic Number Theory</span>
-          <span class="chip">Automorphic Forms</span>
-        </div>
-
+        <h1>Alex Mercer</h1>
+        <p class="hero-position">Associate Professor · Institute of Mathematics, ETH Zürich</p>
         <div class="bio">
-          <p>I am a Doctoral Candidate in Pure Mathematics at the <a href="https://www.uni-goettingen.de/">University of Göttingen</a>, supervised by Prof. Preda Mihăilescu.
-          Previously, I completed my Master's degree at Xiamen University.</p>
-          <p>My research focuses on <strong>number theory</strong>, specifically studying solutions to Diophantine equations.</p>
+          <p>I am an Associate Professor at the <a href="#">Institute of Mathematics</a> of <a href="#">ETH Zürich</a>.
+          My research is in <strong>geometric analysis</strong> and <strong>global differential geometry</strong>,
+          with a particular focus on curvature constraints in Riemannian geometry and their topological consequences.</p>
+          <p>I am especially interested in questions relating the scalar curvature $\text{Ric} \geq 0$ to spectral geometry and index theory, and in the coarse geometry of non-compact manifolds.</p>
         </div>
       </section>
-
-      <div class="divider"></div>
 
       <!-- PUBLICATIONS -->
       <section id="publications">
-        <div class="section-header">
-          <h2>Publications</h2>
-          <span class="section-count">4 selected</span>
-        </div>
+        <span class="h2-accent"></span>
+        <h2>Publications</h2>
         <div class="pub-list">
-
           <div class="pub-item">
-            <div class="pub-stripe"></div>
-            <div class="pub-content">
-              <p class="pub-title">Beyond and slightly aside of the Fermat desert</p>
-              <p class="pub-authors">Bartolomé, Boris and Chang Liu and Preda Mihăilescu*</p>
-              <p class="pub-venue">Under review · 2025</p>
-              <div class="pub-abstract">
-                [Abstract not available]
-              </div>
-              <div class="pub-actions">
-                <button class="btn-abstract" onclick="toggleAbstract(this)">Abstract ↓</button>
-                <div class="pub-tags">
-                  <span class="pub-tag">Number Theory</span>
-                </div>
-              </div>
+            <p class="pub-title">Rigidity of stable minimal hypersurfaces via eigenvalue comparison</p>
+            <p class="pub-authors">Alex Mercer, Sofia Lindqvist</p>
+            <p class="pub-venue">Journal of Differential Geometry, 2024</p>
+            <div class="pub-abstract">
+              We show that compact stable minimal hypersurfaces in manifolds with $\text{Ric} \geq (n-1)$ must be totally geodesic, via a spectral comparison on the stability operator.
             </div>
+            <button class="btn-abstract" onclick="toggleAbstract(this)">+ Abstract</button>
           </div>
-
           <div class="pub-item">
-            <div class="pub-stripe"></div>
-            <div class="pub-content">
-              <p class="pub-title">The diophantine equation $(2^{k}-1)(b^{k}-1)=y^{q}$</p>
-              <p class="pub-authors">Chang Liu and Bo He*</p>
-              <p class="pub-venue">Preprint, under review (arXiv:2512.00548) · 2025</p>
-              <div class="pub-abstract">
-                [Abstract not available]
-              </div>
-              <div class="pub-actions">
-                <button class="btn-abstract" onclick="toggleAbstract(this)">Abstract ↓</button>
-                <div class="pub-tags">
-                  <span class="pub-tag">Diophantine Equations</span>
-                </div>
-              </div>
+            <p class="pub-title">Index theory and scalar curvature on spin manifolds</p>
+            <p class="pub-authors">Alex Mercer</p>
+            <p class="pub-venue">Advances in Mathematics, 2023</p>
+            <div class="pub-abstract">
+              We extend the Lichnerowicz vanishing theorem to generalised Dirac operators on spin$^c$ manifolds, yielding new obstructions to positive scalar curvature.
             </div>
+            <button class="btn-abstract" onclick="toggleAbstract(this)">+ Abstract</button>
           </div>
-
           <div class="pub-item">
-            <div class="pub-stripe"></div>
-            <div class="pub-content">
-              <p class="pub-title">The diophantine equation $(2^k-1)(3^k-1)=x^n$</p>
-              <p class="pub-authors">He, Bo and Chang Liu*</p>
-              <p class="pub-venue">Periodica Mathematica Hungarica · 2025</p>
-              <div class="pub-abstract">
-                [Abstract not available]
-              </div>
-              <div class="pub-actions">
-                <button class="btn-abstract" onclick="toggleAbstract(this)">Abstract ↓</button>
-                <div class="pub-tags">
-                  <span class="pub-tag">Diophantine Equations</span>
-                </div>
-              </div>
+            <p class="pub-title">Coarse geometry of Riemannian foliations with bounded geometry</p>
+            <p class="pub-authors">Alex Mercer, David Kowalski, Yuki Tanaka</p>
+            <p class="pub-venue">Geometry & Topology, 2022</p>
+            <div class="pub-abstract">
+              We study the large-scale geometry of foliations via coarse index methods, proving a coarse analogue of the Connes fibration theorem.
             </div>
-          </div>
-
-          <div class="pub-item">
-            <div class="pub-stripe"></div>
-            <div class="pub-content">
-              <p class="pub-title">An alternative proof of the Catalan conjecture</p>
-              <p class="pub-authors">Chang Liu and Preda Mihăilescu*</p>
-              <p class="pub-venue">Bulletin of the Transilvania University of Braşov · 2025</p>
-              <div class="pub-abstract">
-                [Abstract not available]
-              </div>
-              <div class="pub-actions">
-                <button class="btn-abstract" onclick="toggleAbstract(this)">Abstract ↓</button>
-                <div class="pub-tags">
-                  <span class="pub-tag">Number Theory</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- EDUCATION -->
-      <section id="education">
-        <div class="section-header"><h2>Education</h2></div>
-        <div class="funding-grid">
-          <div class="funding-card">
-            <div class="funding-badge">PhD</div>
-            <h3>Doctoral Candidate in Pure Mathematics</h3>
-            <p>University of Göttingen, Germany, 2021–Now. Supervised by Preda Mihăilescu.</p>
-          </div>
-          <div class="funding-card">
-            <div class="funding-badge">MSc</div>
-            <h3>Master in Pure Mathematics</h3>
-            <p>Xiamen University, China, 2018–2021. Supervised by Huilin Zhu.</p>
-          </div>
-          <div class="funding-card">
-            <div class="funding-badge">BSc</div>
-            <h3>Bachelor in Food Quality and Safety</h3>
-            <p>China Agricultural University, 2011–2018. Supervised by Hao Zhang.</p>
+            <button class="btn-abstract" onclick="toggleAbstract(this)">+ Abstract</button>
           </div>
         </div>
       </section>
 
-      <!-- COMMUNICATIONS -->
-      <section id="communications">
-        <div class="section-header"><h2>Academic Communications</h2></div>
+      <!-- FUNDING -->
+      <section id="funding">
+        <span class="h2-accent"></span>
+        <h2>Funding</h2>
+        <div class="funding-list">
+          <div class="funding-item">
+            <p class="funding-name">ERC Starting Grant — GEOTOP</p>
+            <p class="funding-desc">Geometric topology and scalar curvature. European Research Council, 2022–2027.</p>
+          </div>
+          <div class="funding-item">
+            <p class="funding-name">SNF Project Grant</p>
+            <p class="funding-desc">Rigidity phenomena in Riemannian geometry. Swiss National Science Foundation, 2020–2024.</p>
+          </div>
+          <div class="funding-item">
+            <p class="funding-name">ETH Research Grant</p>
+            <p class="funding-desc">Index theory for non-compact manifolds. 2021–2023.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- TALKS -->
+      <section id="talks">
+        <span class="h2-accent"></span>
+        <h2>Recorded Talks</h2>
         <div class="talk-list">
           <div class="talk-item">
-            <div class="talk-date">Aug 2022</div>
+            <div class="talk-year">Dec 2024</div>
             <div>
-              <p class="talk-title">Automorphic Forms Summer School</p>
-              <p class="talk-event">Erdős Center, Budapest, Hungary</p>
+              <p class="talk-title">Spectral geometry and curvature rigidity</p>
+              <p class="talk-event">Oberwolfach Workshop on Differential Geometry</p>
+              <div class="talk-links">
+                <a class="talk-link" href="#">Video</a>
+                <span style="color:var(--border)">·</span>
+                <a class="talk-link" href="#">Slides</a>
+              </div>
             </div>
           </div>
           <div class="talk-item">
-            <div class="talk-date">Aug 2020</div>
+            <div class="talk-year">Jun 2024</div>
             <div>
-              <p class="talk-title">Number Theory Short Online Course</p>
-              <p class="talk-event">Xiamen University, Xiamen, China</p>
+              <p class="talk-title">New obstructions to positive scalar curvature</p>
+              <p class="talk-event">International Congress of Mathematicians, Zürich</p>
+              <div class="talk-links">
+                <a class="talk-link" href="#">Video</a>
+              </div>
             </div>
           </div>
           <div class="talk-item">
-            <div class="talk-date">May 2019</div>
+            <div class="talk-year">Mar 2023</div>
             <div>
-              <p class="talk-title">Young Mathematicians Academic Forum (Séminaire Mathjeunes--USTC)</p>
-              <p class="talk-event">University of Science and Technology of China, Hefei, China</p>
-            </div>
-          </div>
-          <div class="talk-item">
-            <div class="talk-date">Jan 2019</div>
-            <div>
-              <p class="talk-title">Diophantine Analysis Workshop</p>
-              <p class="talk-event">Xiamen University, Xiamen, China</p>
-            </div>
-          </div>
-          <div class="talk-item">
-            <div class="talk-date">Jul 2018</div>
-            <div>
-              <p class="talk-title">National Summer School for Graduate Students in Pure Mathematics</p>
-              <p class="talk-event">Xiamen University, Xiamen, China</p>
+              <p class="talk-title">Coarse index theory — an introduction</p>
+              <p class="talk-event">Graduate Colloquium, University of Bonn</p>
+              <div class="talk-links">
+                <a class="talk-link" href="#">Video</a>
+                <span style="color:var(--border)">·</span>
+                <a class="talk-link" href="#">Slides</a>
+              </div>
             </div>
           </div>
         </div>
+      </section>
+
+      <!-- TEACHING -->
+      <section id="teaching">
+        <span class="h2-accent"></span>
+        <h2>Teaching</h2>
+        <table>
+          <thead>
+            <tr><th>Term</th><th>Course</th><th>Level</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>SS 2025</td><td>Differential Geometry II</td><td>Graduate</td></tr>
+            <tr><td>WS 2024</td><td>Introduction to Index Theory</td><td>Seminar</td></tr>
+            <tr><td>SS 2024</td><td>Analysis III</td><td>Undergraduate</td></tr>
+            <tr><td>WS 2023</td><td>Riemannian Geometry</td><td>Graduate</td></tr>
+          </tbody>
+        </table>
       </section>
 
       <!-- CONTACT -->
       <section id="contact">
-        <div class="section-header"><h2>Contact</h2></div>
-        <div class="contact-grid">
-          <div class="contact-card">
-            <p class="contact-label">Email</p>
-            <p><a href="mailto:chang.liu@mathematik.uni-goettingen.de">chang.liu@mathematik.uni-goettingen.de</a><br/>
-            <a href="mailto:chang.liu03@stud.uni-goettingen.de">chang.liu03@stud.uni-goettingen.de</a><br/>
-            <a href="mailto:liuch951229@gmail.com">liuch951229@gmail.com</a></p>
+        <span class="h2-accent"></span>
+        <h2>Contact</h2>
+        <div class="contact-dl">
+          <div>
+            <p class="contact-dt">Email</p>
+            <p class="contact-dd"><a href="mailto:mercer@math.ethz.ch">mercer@math.ethz.ch</a></p>
           </div>
-          <div class="contact-card">
-            <p class="contact-label">Location</p>
-            <p>Göttingen, Germany<br/>Shandong, China</p>
+          <div>
+            <p class="contact-dt">Office</p>
+            <p class="contact-dd">HG G 43.2, Rämistrasse 101<br/>8092 Zürich, Switzerland</p>
+          </div>
+          <div>
+            <p class="contact-dt">Phone</p>
+            <p class="contact-dd">+41 44 632 00 00</p>
+          </div>
+          <div>
+            <p class="contact-dt">Postal Address</p>
+            <p class="contact-dd">Institute of Mathematics<br/>ETH Zürich, 8092 Zürich</p>
           </div>
         </div>
       </section>
-    </main>
 
-    <footer>© 2026 Chang Liu</footer>
+    </main>
+    <footer>© 2026 Alex Mercer · ETH Zürich</footer>
   </div>
 </div>
 
 <script>
-// Toggle abstract
 function toggleAbstract(btn) {
-  const content = btn.closest('.pub-content');
-  const abstract = content.querySelector('.pub-abstract');
+  const abstract = btn.previousElementSibling;
   const open = abstract.classList.toggle('open');
-  btn.textContent = open ? 'Abstract ↑' : 'Abstract ↓';
+  btn.textContent = open ? '− Abstract' : '+ Abstract';
 }
-
-// Rotating wireframe icosahedron
-const canvas = document.getElementById('poly-canvas');
-const ctx = canvas.getContext('2d');
-let W, H, angle = 0;
-
-function resize() {
-  W = canvas.width = canvas.offsetWidth;
-  H = canvas.height = canvas.offsetHeight;
-}
-
-// Icosahedron vertices
-const phi = (1 + Math.sqrt(5)) / 2;
-const rawVerts = [
-  [-1, phi, 0], [1, phi, 0], [-1, -phi, 0], [1, -phi, 0],
-  [0, -1, phi], [0, 1, phi], [0, -1, -phi], [0, 1, -phi],
-  [phi, 0, -1], [phi, 0, 1], [-phi, 0, -1], [-phi, 0, 1]
-];
-
-const edges = [
-  [0,1],[0,5],[0,7],[0,10],[0,11],
-  [1,5],[1,7],[1,8],[1,9],
-  [2,3],[2,4],[2,10],[2,11],
-  [3,4],[3,6],[3,8],[3,9],
-  [4,5],[4,9],[4,11],
-  [5,9],[5,11],
-  [6,7],[6,8],[6,10],
-  [7,8],[7,10],
-  [8,9],[10,11]
-];
-
-function project(v, angle) {
-  // Rotate around Y and X axes
-  const ay = angle * 0.7;
-  const ax = angle * 0.4;
-  let [x, y, z] = v;
-
-  // Rotate Y
-  let x2 = x * Math.cos(ay) + z * Math.sin(ay);
-  let z2 = -x * Math.sin(ay) + z * Math.cos(ay);
-  x = x2; z = z2;
-
-  // Rotate X
-  let y2 = y * Math.cos(ax) - z * Math.sin(ax);
-  z2 = y * Math.sin(ax) + z * Math.cos(ax);
-  y = y2; z = z2;
-
-  const scale = 120;
-  const fov = 6;
-  const px = (x / (z / fov + 1)) * scale + W / 2;
-  const py = (y / (z / fov + 1)) * scale + H / 2;
-  return [px, py, z];
-}
-
-function draw() {
-  ctx.clearRect(0, 0, W, H);
-  angle += 0.003;
-
-  const projected = rawVerts.map(v => project(v, angle));
-
-  ctx.strokeStyle = '#6d28d9';
-  ctx.lineWidth = 1.5;
-
-  for (const [i, j] of edges) {
-    const [px1, py1, z1] = projected[i];
-    const [px2, py2, z2] = projected[j];
-    const alpha = Math.max(0.1, Math.min(1, (z1 + z2) / 4 + 0.7));
-    ctx.strokeStyle = `rgba(109,40,217,${alpha})`;
-    ctx.beginPath();
-    ctx.moveTo(px1, py1);
-    ctx.lineTo(px2, py2);
-    ctx.stroke();
-  }
-
-  for (const [px, py, z] of projected) {
-    const alpha = Math.max(0.2, Math.min(1, z / 2 + 0.7));
-    ctx.fillStyle = `rgba(109,40,217,${alpha})`;
-    ctx.beginPath();
-    ctx.arc(px, py, 2.5, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  requestAnimationFrame(draw);
-}
-
-window.addEventListener('resize', resize);
-resize();
-draw();
 </script>
 </body>
 </html>
