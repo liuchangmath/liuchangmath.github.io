@@ -1,0 +1,7 @@
+# Ignore the raw CV folders to protect sensitive LaTeX files
+/Curriculum Vitae/
+/中文简历985 (Copy)/
+
+# Ignore Mac system files
+.DS_Store
+*.swp
