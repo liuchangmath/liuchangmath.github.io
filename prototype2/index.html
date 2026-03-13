@@ -916,13 +916,13 @@ document.querySelectorAll('.nav-list a').forEach(link => {
     const href = link.getAttribute('href');
     if (href && href.startsWith('#')) {
       e.preventDefault();
+      const targetId = href;
       closeMobileMenu();
-      const target = document.querySelector(href);
-      if (target) {
-        setTimeout(() => {
-          target.scrollIntoView({ behavior: 'smooth' });
-        }, 350);
-      }
+      // Wait for sidebar to close, then navigate
+      setTimeout(() => {
+        window.location.hash = '';
+        window.location.hash = targetId;
+      }, 400);
     }
   });
 });
