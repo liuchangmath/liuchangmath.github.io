@@ -910,9 +910,21 @@ menuBtn.addEventListener('click', () => {
 
 overlay.addEventListener('click', closeMobileMenu);
 
-// Close mobile menu when clicking a nav link
+// Close mobile menu when clicking a nav link (with delay so scroll works)
 document.querySelectorAll('.nav-list a').forEach(link => {
-  link.addEventListener('click', closeMobileMenu);
+  link.addEventListener('click', (e) => {
+    const href = link.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      e.preventDefault();
+      closeMobileMenu();
+      const target = document.querySelector(href);
+      if (target) {
+        setTimeout(() => {
+          target.scrollIntoView({ behavior: 'smooth' });
+        }, 350);
+      }
+    }
+  });
 });
 </script>
 </body>
