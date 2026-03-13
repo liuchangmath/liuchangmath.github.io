@@ -427,7 +427,7 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.4);
+      background: transparent;
       z-index: 149;
     }
 
@@ -901,13 +901,11 @@ const sidebar = document.querySelector('aside');
 function closeMobileMenu() {
   sidebar.classList.remove('open');
   overlay.classList.remove('open');
-  menuBtn.textContent = '☰';
 }
 
 menuBtn.addEventListener('click', () => {
   const isOpen = sidebar.classList.toggle('open');
   overlay.classList.toggle('open');
-  menuBtn.textContent = isOpen ? '✕' : '☰';
 });
 
 overlay.addEventListener('click', closeMobileMenu);
