@@ -405,122 +405,6 @@
       grid-column: 2;
     }
 
-    /* ── Mobile hamburger button (hidden on desktop) ── */
-    .mobile-menu-btn {
-      display: none;
-      position: fixed;
-      top: 1rem;
-      left: 1rem;
-      z-index: 200;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      cursor: pointer;
-      padding: 0.5rem 0.6rem;
-      font-size: 1.2rem;
-      border-radius: 4px;
-      line-height: 1;
-    }
-
-    /* ── Mobile overlay for sidebar ── */
-    .mobile-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: transparent;
-      z-index: 149;
-    }
-
-    /* ── Responsive: Tablet & Phone ── */
-    @media (max-width: 768px) {
-      .mobile-menu-btn { display: block; }
-
-      .controls {
-        top: 1rem;
-        right: 1rem;
-        gap: 0.5rem;
-      }
-
-      .ctrl-btn {
-        padding: 0.35rem 0.6rem;
-        font-size: 0.8rem;
-      }
-
-      .wrapper {
-        grid-template-columns: 1fr;
-      }
-
-      aside {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 260px;
-        height: 100vh;
-        z-index: 150;
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-        border-right: 1px solid var(--border);
-        background: var(--surface);
-        padding: 3rem 1.5rem 2rem;
-      }
-
-      aside.open {
-        transform: translateX(0);
-      }
-
-      .mobile-overlay.open {
-        display: block;
-      }
-
-      [data-theme="dark"] aside {
-        background: #24221f;
-      }
-
-      main {
-        padding: 3rem 1.5rem 2rem;
-        max-width: 100%;
-      }
-
-      footer {
-        grid-column: 1;
-        padding: 1.5rem;
-      }
-
-      .hero-photo-wrap {
-        float: none;
-        margin: 0 0 1.5rem 0;
-        display: flex;
-        justify-content: center;
-      }
-
-      .hero-photo {
-        width: 110px;
-        height: 140px;
-      }
-
-      h1 {
-        text-align: center;
-        font-size: 2rem;
-      }
-
-      .hero-position {
-        text-align: center;
-      }
-
-      .contact-dl {
-        grid-template-columns: 1fr;
-        gap: 1.2rem;
-      }
-
-      .talk-item {
-        flex-direction: column;
-        gap: 0.3rem;
-      }
-
-      .talk-year {
-        min-width: auto;
-      }
-    }
   </style>
 </head>
 <body data-theme="light" data-lang="en">
@@ -528,8 +412,7 @@
   <button class="ctrl-btn" id="lang-toggle" aria-label="Toggle language">中文/EN</button>
   <button class="ctrl-btn" id="theme-toggle" aria-label="Toggle theme">🌙</button>
 </div>
-<button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Open menu">☰</button>
-<div class="mobile-overlay" id="mobile-overlay"></div>
+
 <div class="wrapper">
 
   <!-- SIDEBAR -->
@@ -893,39 +776,6 @@ function updateThemeButton() {
   btn.textContent = currentTheme === 'light' ? '🌙' : '☀️';
 }
 
-// Mobile menu toggle
-const menuBtn = document.getElementById('mobile-menu-btn');
-const overlay = document.getElementById('mobile-overlay');
-const sidebar = document.querySelector('aside');
-
-function closeMobileMenu() {
-  sidebar.classList.remove('open');
-  overlay.classList.remove('open');
-}
-
-menuBtn.addEventListener('click', () => {
-  const isOpen = sidebar.classList.toggle('open');
-  overlay.classList.toggle('open');
-});
-
-overlay.addEventListener('click', closeMobileMenu);
-
-// Close mobile menu when clicking a nav link (with delay so scroll works)
-document.querySelectorAll('.nav-list a').forEach(link => {
-  link.addEventListener('click', (e) => {
-    const href = link.getAttribute('href');
-    if (href && href.startsWith('#')) {
-      e.preventDefault();
-      const targetId = href;
-      closeMobileMenu();
-      // Wait for sidebar to close, then navigate
-      setTimeout(() => {
-        window.location.hash = '';
-        window.location.hash = targetId;
-      }, 400);
-    }
-  });
-});
 </script>
 </body>
 </html>
