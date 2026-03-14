@@ -910,19 +910,23 @@ menuBtn.addEventListener('click', () => {
 
 overlay.addEventListener('click', closeMobileMenu);
 
-// Close mobile menu when clicking a nav link (with delay so scroll works)
+// Close mobile menu when clicking a nav link, then scroll to target
 document.querySelectorAll('.nav-list a').forEach(link => {
   link.addEventListener('click', (e) => {
     const href = link.getAttribute('href');
     if (href && href.startsWith('#')) {
       e.preventDefault();
-      const targetId = href;
+      const target = document.querySelector(href);
       closeMobileMenu();
-      // Wait for sidebar to close, then navigate
-      setTimeout(() => {
-        window.location.hash = '';
-        window.location.hash = targetId;
-      }, 400);
+      if (target) {
+        // Wait for sidebar to slide away, then scroll using window.scrollTo
+        // (scrollIntoView can fail when called from inside a fixed element)
+        setTimeout(() => {
+          const rect = target.getBoundingClientRect();
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          window.scrollTo({ top: rect.top + scrollTop, behavior: 'smooth' });
+        }, 320);
+      }
     }
   });
 });
