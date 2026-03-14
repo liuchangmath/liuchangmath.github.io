@@ -405,120 +405,6 @@
       grid-column: 2;
     }
 
-    /* ══════════════════════════════════════
-       MOBILE — hamburger button
-       Hidden on desktop, shown on mobile
-    ══════════════════════════════════════ */
-    .hamburger {
-      display: none;                  /* desktop: hide */
-      position: fixed;
-      top: 1rem;
-      left: 1rem;
-      z-index: 300;                   /* above sidebar (200) and overlay (100) */
-      width: 2.4rem;
-      height: 2.4rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      cursor: pointer;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      padding: 0;
-    }
-    /* Three-bar icon via pseudo-elements + span */
-    .hamburger span,
-    .hamburger::before,
-    .hamburger::after {
-      display: block;
-      width: 1.1rem;
-      height: 2px;
-      background: var(--text);
-      border-radius: 2px;
-      transition: transform 0.25s ease, opacity 0.25s ease;
-    }
-    .hamburger::before { content: ''; }
-    .hamburger::after  { content: ''; }
-    /* Animate into X when sidebar is open */
-    .hamburger.is-open::before { transform: translateY(7px) rotate(45deg); }
-    .hamburger.is-open span    { opacity: 0; transform: scaleX(0); }
-    .hamburger.is-open::after  { transform: translateY(-7px) rotate(-45deg); }
-
-    /* ══════════════════════════════════════
-       MOBILE — dimming overlay
-       Covers main content while sidebar is open
-    ══════════════════════════════════════ */
-    .nav-overlay {
-      display: none;                  /* hidden by default */
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.35);
-      z-index: 100;                   /* below sidebar (200), above content */
-      backdrop-filter: blur(1px);
-      -webkit-backdrop-filter: blur(1px);
-    }
-    .nav-overlay.is-open { display: block; }
-
-    /* ══════════════════════════════════════
-       MOBILE — @media breakpoint ≤ 768px
-    ══════════════════════════════════════ */
-    @media (max-width: 768px) {
-
-      /* Show hamburger as flex so the bars center properly */
-      .hamburger { display: flex; }
-
-      /* Shrink the theme/lang toggle buttons */
-      .controls { top: 1rem; right: 1rem; gap: 0.4rem; }
-      .ctrl-btn  { padding: 0.35rem 0.55rem; font-size: 0.78rem; min-width: 36px; }
-
-      /* Collapse grid to single column */
-      .wrapper { grid-template-columns: 1fr; }
-
-      /* Sidebar: fixed, slides in from left */
-      aside {
-        position: fixed;
-        inset: 0 auto 0 0;           /* top:0 left:0 bottom:0 */
-        width: 270px;
-        z-index: 200;
-        transform: translateX(-100%);
-        transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
-        background: var(--surface);
-        border-right: 1px solid var(--border);
-        padding: 4rem 1.5rem 2rem;   /* extra top so content clears hamburger */
-        overflow-y: auto;
-      }
-      [data-theme="dark"] aside { background: #24221f; }
-
-      /* Sidebar visible state */
-      aside.is-open { transform: translateX(0); }
-
-      /* Main content area */
-      main { padding: 5rem 1.25rem 2rem; max-width: 100%; }
-
-      /* Footer spans full width */
-      footer { grid-column: 1; padding: 1.25rem 1.25rem; }
-
-      /* Hero photo: centered instead of float-right */
-      .hero-photo-wrap {
-        float: none;
-        margin: 0 auto 1.5rem;
-        display: flex;
-        justify-content: center;
-      }
-      .hero-photo { width: 110px; height: 140px; }
-
-      /* Hero text: center-aligned */
-      h1 { text-align: center; font-size: 1.9rem; }
-      .hero-position { text-align: center; }
-
-      /* Contact grid: single column on mobile */
-      .contact-dl { grid-template-columns: 1fr; gap: 1.2rem; }
-
-      /* Talk items: stack year above title */
-      .talk-item  { flex-direction: column; gap: 0.25rem; }
-      .talk-year  { min-width: auto; }
-    }
   </style>
 </head>
 <body data-theme="light" data-lang="en">
@@ -526,10 +412,7 @@
   <button class="ctrl-btn" id="lang-toggle" aria-label="Toggle language">中文/EN</button>
   <button class="ctrl-btn" id="theme-toggle" aria-label="Toggle theme">🌙</button>
 </div>
-<button class="hamburger" id="hamburger" aria-label="Toggle navigation menu" aria-expanded="false">
-  <span></span>
-</button>
-<div class="nav-overlay" id="nav-overlay" aria-hidden="true"></div>
+
 <div class="wrapper">
 
   <!-- SIDEBAR -->
@@ -893,65 +776,6 @@ function updateThemeButton() {
   btn.textContent = currentTheme === 'light' ? '🌙' : '☀️';
 }
 
-// ── Mobile navigation ─────────────────────────────────────
-(function () {
-  const hamburger = document.getElementById('hamburger');
-  const navOverlay = document.getElementById('nav-overlay');
-  const sidebar    = document.querySelector('aside');
-
-  /** Open or close the sidebar + overlay */
-  function setSidebarOpen(open) {
-    sidebar.classList.toggle('is-open', open);
-    navOverlay.classList.toggle('is-open', open);
-    hamburger.classList.toggle('is-open', open);
-    hamburger.setAttribute('aria-expanded', String(open));
-  }
-
-  /** Close the sidebar */
-  function closeSidebar() {
-    setSidebarOpen(false);
-  }
-
-  // Hamburger click: toggle sidebar
-  hamburger.addEventListener('click', () => {
-    const willOpen = !sidebar.classList.contains('is-open');
-    setSidebarOpen(willOpen);
-  });
-
-  // Overlay click: close sidebar
-  navOverlay.addEventListener('click', closeSidebar);
-
-  // ESC key: close sidebar
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeSidebar();
-  });
-
-  // Nav link clicks: close sidebar then scroll to target section
-  document.querySelectorAll('.nav-list a').forEach(link => {
-    link.addEventListener('click', (e) => {
-      const href = link.getAttribute('href');
-      if (!href || !href.startsWith('#')) return;
-
-      const target = document.getElementById(href.slice(1));
-      if (!target) return;
-
-      e.preventDefault();
-
-      // Only need the delay when sidebar is actually open (mobile)
-      const sidebarIsOpen = sidebar.classList.contains('is-open');
-      closeSidebar();
-
-      const delay = sidebarIsOpen ? 300 : 0;
-      setTimeout(() => {
-        // getBoundingClientRect + window.scrollTo is reliable regardless
-        // of whether the click originated inside a fixed-position element
-        const rect      = target.getBoundingClientRect();
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        window.scrollTo({ top: scrollTop + rect.top, behavior: 'smooth' });
-      }, delay);
-    });
-  });
-}());
 </script>
 </body>
 </html>
